@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prepara 360 | Regional 15 de Educación</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #f1f5f9; margin: 0; padding: 20px; display: flex; justify-content: center; align-items: center; min-height: 100vh; flex-direction: column; }
+        .card { width: 100%; max-width: 650px; background: #fff; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); overflow: hidden; border-top: 6px solid #002d62; border-bottom: 6px solid #ce1126; }
+        .header { padding: 24px; text-align: center; border-bottom: 1px solid #e2e8f0; }
+        .header h2 { font-size: 12px; color: #ce1126; text-transform: uppercase; margin: 0; }
+        .header h1 { font-size: 22px; color: #002d62; margin: 5px 0; }
+        .body { padding: 24px; }
+        .group { margin-bottom: 15px; }
+        label { display: block; font-weight: 600; color: #002d62; margin-bottom: 5px; font-size: 14px; }
+        input, select, textarea { width: 100%; padding: 10px; border: 2px solid #cbd5e1; border-radius: 8px; font-size: 14px; box-sizing: border-box; }
+        .options { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+        .opt { border: 2px solid #cbd5e1; padding: 10px; border-radius: 8px; text-align: center; font-weight: 600; cursor: pointer; font-size: 13px; }
+        .opt input { display: none; }
+        .opt.selected { border-color: #002d62; background: rgba(0,45,98,0.05); color: #002d62; }
+        .btn { background: #002d62; color: #fff; border: none; width: 100%; padding: 12px; font-size: 16px; font-weight: 700; border-radius: 8px; cursor: pointer; margin-top: 10px; }
+        #success, #admin-panel { display: none; text-align: center; padding: 25px; }
+        .stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 20px; text-align: left; }
+        .stat-box { background: #f8fafc; border: 2px solid #cbd5e1; padding: 15px; border-radius: 10px; text-align: center; }
+        .stat-box span { font-size: 22px; font-weight: 800; color: #002d62; display: block; margin-top: 5px; }
+        .dashboard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; text-align: left; }
+        .dash-card { background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 12px; font-size: 13px; }
+        .dash-card h4 { margin: 0 0 8px 0; color: #002d62; font-size: 14px; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px; }
+        .dash-item { display: flex; justify-content: space-between; margin-bottom: 4px; font-weight: 600; color: #334155; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 13px; text-align: left; }
+        th, td { padding: 10px; border-bottom: 1px solid #e2e8f0; }
+        th { background: #f1f5f9; color: #002d62; }
+        .btn-excel { background-color: #ce1126; color: white; border: none; width: 100%; padding: 12px; font-size: 14px; font-weight: 700; border-radius: 8px; cursor: pointer; margin-top: 15px; text-decoration: none; display: block; text-align: center; }
+        .admin-link { margin-top: 15px; text-align: center; font-size: 12px; color: #64748b; cursor: pointer; }
+        .admin-link:hover { color: #002d62; text-decoration: underline; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <!-- VISTA DEL FORMULARIO PARA LOS USUARIOS -->
+    <div id="vista-formulario">
+        <div class="header" id="head">
+            <h2>Regional 15 de Educación</h2>
+            <h1>Prepara 360</h1>
+            <p style="margin:0; font-size:13px; color:#64748b;">Evaluación y Monitoreo</p>
+        </div>
+        <form id="f" onsubmit="enviarEncuesta(event)" class="body">
+            <div class="group">
+                <label>Nombre Completo</label>
+                <input type="text" id="nombre" required placeholder="Ej. Juan Pérez">
+            </div>
+            <div class="group">
+                <label>Distrito Educativo</label>
+                <select id="distrito" required>
+                    <option value="">Seleccione su distrito</option>
+                    <option value="Distrito 15-01">Distrito 15-01</option>
+                    <option value="Distrito 15-02">Distrito 15-02</option>
+                    <option value="Distrito 15-03">Distrito 15-03</option>
+                    <option value="Distrito 15-04">Distrito 15-04</option>
+                    <option value="Distrito 15-05">Distrito 15-05</option>
+                    <option value="Distrito 15-06">Distrito 15-06</option>
+                </select>
+            </div>
+            <div class="group">
+                <label>Valoración del Programa</label>
+                <div class="options">
+                    <label class="opt" onclick="sel(this)"><input type="radio" name="val" value="Excelente" required>Excelente</label>
+                    <label class="opt" onclick="sel(this)"><input type="radio" name="val" value="Bueno">Bueno</label>
+                    <label class="opt" onclick="sel(this)"><input type="radio" name="val" value="Regular">Regular</label>
+                </div>
+            </div>
+            <div class="group">
+                <label>Comentarios</label>
+                <textarea id="comentarios" rows="2" placeholder="Observaciones..."></textarea>
+            </div>
+            <button type="submit" class="btn">Enviar Encuesta</button>
+        </form>
+        <div id="success" class="body">
+            <h2 style="color:#16a34a; font-size:22px;">¡Proceso Finalizado!</h2>
+            <p style="color:#ce1126; font-weight:700;">Encuesta completada exitosamente, gracias</p>
+            <button class="btn" onclick="location.reload()" style="margin-top:15px;">Llenar Otra Respuesta</button>
+        </div>
+    </div>
+
+    <!-- DASHBOARD PRIVADO PROTEGIDO POR CÓDIGO (SOLO PARA TI) -->
+    <div id="admin-panel" class="body" style="text-align: left;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+            <h2 style="color: #002d62; margin:0; font-size:18px;">Dashboard de Resultados - Prepara 360</h2>
+            <button onclick="location.reload()" style="background:#ce1126; color:#fff; border:none; padding:6px 12px; border-radius:6px; cursor:pointer; font-size:12px; font-weight:700;">Salir</button>
+        </div>
+        
+        <div class="stats">
+            <div class="stat-box">Total Respuestas <span id="total">0</span></div>
+            <div class="stat-box">Ámbito <span>Distritos 15-01 al 15-06</span></div>
+        </div>
+
+        <div class="dashboard-grid">
+            <div class="dash-card">
+                <h4>Valoración (%)</h4>
+                <div class="dash-item"><span>Excelente:</span> <span id="stat-excelente">0 (0%)</span></div>
+                <div class="dash-item"><span>Bueno:</span> <span id="stat-bueno">0 (0%)</span></div>
+                <div class="dash-item"><span>Regular:</span> <span id="stat-regular">0 (0%)</span></div>
+            </div>
+            <div class="dash-card">
+                <h4>Participación por Distrito</h4>
+                <div id="stat-distritos" style="max-height: 80px; overflow-y: auto;">
+                    <span style="color:#64748b; font-size:12px;">Sin datos</span>
+                </div>
+            </div>
+        </div>
+
+        <h3 style="color: #002d62; font-size:14px; margin-bottom:5px;">Listado de Registros:</h3>
+        <div style="max-height: 150px; overflow-y: auto;">
+            <table>
+                <thead>
+                    <tr><th>Nombre</th><th>Distrito</th><th>Valoración</th><th>Comentarios</th></tr>
+                </thead>
+                <tbody id="tabla">
+                    <tr><td colspan="4" style="text-align: center; color:#64748b;">Sin respuestas aún</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <a id="link-excel" href="#" target="_blank" class="btn-excel" style="display:none;">Descargar Reporte (CSV)</a>
+    </div>
+</div>
+
+<!-- ACCESO SECRETO ABAJO -->
+<div class="admin-link" onclick="accesoAdmin()">🔒 Acceso exclusivo administrador</div>
+
+<script>
+    function sel(el) {
+        document.querySelectorAll('.opt').forEach(o => o.classList.remove('selected'));
+        el.classList.add('selected');
+        el.querySelector('input').checked = true;
+    }
+
+    function enviarEncuesta(e) {
+        e.preventDefault();
+        
+        let nuevoRegistro = {
+            nombre: document.getElementById('nombre').value.trim(),
+            distrito: document.getElementById('distrito').value,
+            valoracion: document.querySelector('input[name="val"]:checked').value,
+            comentarios: document.getElementById('comentarios').value.trim() || 'Ninguno',
+            fecha: new Date().toLocaleString()
+        };
+
+        // Almacenamiento seguro en el navegador del equipo donde se evalúa
+        let db = JSON.parse(localStorage.getItem('respuestas_prepara360') || '[]');
+        db.push(nuevoRegistro);
+        localStorage.setItem('respuestas_prepara360', JSON.stringify(db));
+
+        // Mensaje exacto pedido por ti
+        document.getElementById('f').style.display = 'none';
+        document.getElementById('head').style.display = 'none';
+        document.getElementById('success').style.display = 'block';
+    }
+
+    function accesoAdmin() {
+        let clave = prompt("Ingrese su código de acceso de administrador:");
+        // CÓDIGO DE ACCESO CONFIGURADO: 15360
+        if (clave === "15360") {
+            document.getElementById('vista-formulario').style.display = 'none';
+            document.getElementById('admin-panel').style.display = 'block';
+            cargarDashboard();
+        } else if (clave !== null) {
+            alert("Código incorrecto. Acceso denegado.");
+        }
+    }
+
+    function cargarDashboard() {
+        let db = JSON.parse(localStorage.getItem('respuestas_prepara360') || '[]');
+        let total = db.length;
+        document.getElementById('total').innerText = total;
+
+        if (total === 0) return;
+
+        let exc = db.filter(r => r.valoracion === 'Excelente').length;
+        let bue = db.filter(r => r.valoracion === 'Bueno').length;
+        let reg = db.filter(r => r.valoracion === 'Regular').length;
+
+        document.getElementById('stat-excelente').innerText = `${exc} (${((exc / total) * 100).toFixed(1)}%)`;
+        document.getElementById('stat-bueno').innerText = `${bue} (${((bue / total) * 100).toFixed(1)}%)`;
+        document.getElementById('stat-regular').innerText = `${reg} (${((reg / total) * 100).toFixed(1)}%)`;
+
+        let distritosContador = {};
+        db.forEach(r => {
+            distritosContador[r.distrito] = (distritosContador[r.distrito] || 0) + 1;
+        });
+
+        let distHTML = '';
+        Object.keys(distritosContador).forEach(d => {
+            let count = distritosContador[d];
+            let porc = ((count / total) * 100).toFixed(1);
+            distHTML += `<div class="dash-item"><span>${d}:</span> <span>${count} (${porc}%)</span></div>`;
+        });
+        document.getElementById('stat-distritos').innerHTML = distHTML;
+
+        let tbody = document.getElementById('tabla');
+        tbody.innerHTML = '';
+        db.forEach(r => {
+            let tr = document.createElement('tr');
+            tr.innerHTML = `<td>${r.nombre}</td><td>${r.distrito}</td><td><b>${r.valoracion}</b></td><td>${r.comentarios}</td>`;
+            tbody.appendChild(tr);
+        });
+
+        let csv = "data:text/csv;charset=utf-8,Nombre,Distrito,Valoracion,Comentarios,Fecha\r\n";
+        db.forEach(row => { csv += `"${row.nombre}","${row.distrito}","${row.valoracion}","${row.comentarios}","${row.fecha}"\r\n`; });
+        let btnExcel = document.getElementById('link-excel');
+        btnExcel.setAttribute("href", encodeURI(csv));
+        btnExcel.setAttribute("download", "resultados_prepara360.csv");
+        btnExcel.style.display = "block";
+    }
+</script>
+</body>
+</html>
